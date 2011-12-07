@@ -76,9 +76,6 @@ init_context(){
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
@@ -131,19 +128,19 @@ create_shaders(){
 	GLint res;
 
 	const char* vert_src =
-		"#version 150 core\n"
+		"#version 150\n"
 		"in vec2 in_Position;\n"
 		"\n"
 		"void main(){\n"
 		"	gl_Position = vec4(in_Position, .0, 1.0);\n"
-		"};";
+		"}";
 	const char* frag_src = 
-		"#version 150 core\n"
+		"#version 150\n"
 		"out vec4 frag_Color;\n"
 		"\n"
 		"void main(){\n"
 		"	frag_Color = vec4(1.0, .0, .0, 1.0);\n"
-		"};";
+		"}";
 
 	// Generate some IDs for our shader programs
 	g_shVert = glCreateShader(GL_VERTEX_SHADER);

@@ -2,8 +2,16 @@
 #include <stdio.h>
 
 #include "SDL/SDL.h"
-#define GL_GLEXT_PROTOTYPES
-#include "SDL/SDL_opengl.h"
+#ifdef _WIN32
+#	pragma comment(lib, "opengl32.lib")
+#	pragma comment(lib, "sdl.lib")
+#	pragma comment(lib, "sdlmain.lib")
+#	define GLEW_STATIC 1
+#	include "GL/GLEW.h"
+#else
+#	define GL_GLEXT_PROTOTYPES
+#	include "SDL/SDL_opengl.h"
+#endif
 
 // Globals
 //
@@ -24,7 +32,7 @@ GLuint			g_vbo;
 // Prototypes
 //
 bool	init_context();
-void	init_opengl();
+bool	init_opengl();
 void	create_shaders();
 void	create_vao();
 void	run();
@@ -40,7 +48,10 @@ int main(int argc, char* argv[]){
 	if (!init_context())
 		return 1;
 
-	init_opengl();
+	if (!init_opengl()){
+		release();
+		return	1;
+	}
 
 	run();
 
@@ -92,8 +103,15 @@ init_context(){
 }
 
 //-----------------------------------------------------------------------------
-void
+bool
 init_opengl(){
+#ifdef _WIN32
+	GLenum err;
+	if (GLEW_OK != (err = glewInit())){
+		fprintf(stderr, "Could not init GLEW: %s\n", glewGetErrorString(err));
+		return false;
+	}
+#endif
 	create_shaders();
 	create_vao();
 
@@ -102,6 +120,7 @@ init_opengl(){
 	glClearDepth(1.0f);
 
 	glViewport(0, 0, WIDTH, HEIGHT);
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -234,6 +253,8 @@ render(){
 //-----------------------------------------------------------------------------
 void
 release(){
+	glDeleteBuffers(1, &g_vbo);
+	glDeleteVertexArrays(1, &g_vao);
 	SDL_GL_DeleteContext(g_context);
 	SDL_DestroyWindow(g_pWindow);
 	SDL_Quit();

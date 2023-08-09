@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 #ifdef _WIN32
 #	pragma comment(lib, "opengl32.lib")
 #	pragma comment(lib, "sdl.lib")
@@ -10,7 +10,7 @@
 #	include "GL/GLEW.h"
 #else
 #	define GL_GLEXT_PROTOTYPES
-#	include "SDL/SDL_opengl.h"
+#	include "SDL2/SDL_opengl.h"
 #endif
 
 // Globals
@@ -228,7 +228,7 @@ run(){
 void
 check_events(){
 	SDL_Event evt;
-	SDLKey key;
+	SDL_Keycode key;
 
 	while (SDL_PollEvent(&evt)){
 		switch(evt.type){
